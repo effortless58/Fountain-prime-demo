@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Portal - Fountain Prime School</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #667eea;
+            --secondary: #764ba2;
+            --success: #48bb78;
+            --danger: #f56565;
+            --dark: #2d3748;
+            --light: #f7fafc;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .container {
+            max-width: 1000px;
+            width: 100%;
+        }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: white;
+            text-decoration: none;
+            margin-bottom: 1rem;
+            padding: 0.5rem 1rem;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50px;
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover {
+            background: rgba(255,255,255,0.2);
+            transform: translateX(-5px);
+        }
+
+        .portal-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            animation: slideUp 0.6s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .portal-info {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 3rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .portal-info h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .portal-info p {
+            margin-bottom: 1.5rem;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        .feature-list {
+            list-style: none;
+        }
+
+        .feature-list li {
+            padding: 0.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .feature-list i {
+            color: var(--success);
+        }
+
+        .portal-form {
+            padding: 3rem;
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .form-header h3 {
+            color: var(--dark);
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-header p {
+            color: #718096;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .tab {
+            padding: 1rem 2rem;
+            background: none;
+            border: none;
+            color: #718096;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .tab.active {
+            color: var(--primary);
+        }
+
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-wrapper i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #a0aec0;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 1rem 1rem 1rem 3rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .forgot-password {
+            text-align: right;
+            margin-bottom: 1.5rem;
+        }
+
+        .forgot-password a {
+            color: var(--primary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 1rem;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            display: none;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .alert.show {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .alert-success {
+            background: #c6f6d5;
+            color: #22543d;
+        }
+
+        .alert-error {
+            background: #fed7d7;
+            color: #742a2a;
+        }
+
+        .demo-note {
+            background: #bee3f8;
+            color: #2c5282;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        .demo-note strong {
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Results Dashboard */
+        .dashboard {
+            display: none;
+        }
+
+        .dashboard.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .dashboard-header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+        }
+
+        .student-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .student-details h2 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .student-details p {
+            opacity: 0.9;
+        }
+
+        .logout-btn {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #718096;
+            font-size: 0.9rem;
+        }
+
+        .results-table {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .results-table h3 {
+            padding: 1.5rem;
+            background: var(--light);
+            color: var(--dark);
+            margin: 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+        }
+
+        th {
+            background: var(--primary);
+            color: white;
+            font-weight: 600;
+        }
+
+        tbody tr:nth-child(even) {
+            background: var(--light);
+        }
+
+        tbody tr:hover {
+            background: #edf2f7;
+        }
+
+        .grade {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .grade-a { background: #c6f6d5; color: #22543d; }
+        .grade-b { background: #bee3f8; color: #2c5282; }
+        .grade-c { background: #fef5cb; color: #744210; }
+        .grade-d { background: #fed7d7; color: #742a2a; }
+        .grade-f { background: #fed7d7; color: #742a2a; }
+
+        @media (max-width: 768px) {
+            .portal-card {
+                grid-template-columns: 1fr;
+            }
+
+            .portal-info {
+                padding: 2rem;
+            }
+
+            .portal-form {
+                padding: 2rem;
+            }
+
+            .tabs {
+                overflow-x: auto;
+            }
+
+            .tab {
+                padding: 1rem;
+                white-space: nowrap;
+            }
+
+            table {
+                font-size: 0.9rem;
+            }
+
+            th, td {
+                padding: 0.75rem 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back-button">
+            <i class="fas fa-arrow-left"></i>
+            Back to Home
+        </a>
+
+        <!-- Login/Portal Card -->
+        <div class="portal-card" id="loginCard">
+            <div class="portal-info">
+                <h2><i class="fas fa-graduation-cap"></i> Student Portal</h2>
+                <p>Access your academic records, view results, and stay connected with your learning journey.</p>
+                <ul class="feature-list">
+                    <li><i class="fas fa-check-circle"></i> View Your Results</li>
+                    <li><i class="fas fa-check-circle"></i> Track Academic Progress</li>
+                    <li><i class="fas fa-check-circle"></i> Download Report Cards</li>
+                    <li><i class="fas fa-check-circle"></i> Check Attendance</li>
+                    <li><i class="fas fa-check-circle"></i> View Announcements</li>
+                </ul>
+            </div>
+
+            <div class="portal-form">
+                <div class="form-header">
+                    <h3>Welcome Back!</h3>
+                    <p>Please login to your account</p>
+                </div>
+
+                <div class="tabs">
+                    <button class="tab active" onclick="switchTab('student')">
+                        <i class="fas fa-user-graduate"></i> Student
+                    </button>
+                    <button class="tab" onclick="switchTab ('teacher')">
+                        <i class="fas fa-chalkboard-teacher"></i> Teacher
+                    </button>
+                </div>
+
+                <div class="alert alert-error" id="errorAlert">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <span id="errorMessage"></span>
+                </div>
+
+                <!-- Student Login Form -->
+                <div class="tab-content active" id="studentTab">
+                    <form id="studentLoginForm">
+                        <div class="form-group">
+                            <label for="studentId">Admission Number</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-id-card"></i>
+                                <input type="text" id="studentId" placeholder="Enter your admission number" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="studentPassword">Password</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-lock"></i>
+                                <input type="password" id="studentPassword" placeholder="Enter your password" required>
+                            </div>
+                        </div>
+
+                        <div class="forgot-password">
+                            <a href="#">Forgot Password?</a>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-sign-in-alt"></i>
+                            Login to Portal
+                        </button>
+
+                        <div class="demo-note">
+                            <strong>DEMO CREDENTIALS:</strong>
+                            Admission No: <strong>FPS2024001</strong> | Password: <strong>demo123</strong>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Teacher Login Form -->
+                <div class="tab-content active" id="teacherTab">
+                    <form id="teacherLoginForm">
+                        <div class="form-group">
+                            <label for="teacherId">Teacher ID</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-id-badge"></i>
+                                <input type="text" id="teacherId" placeholder="Enter your teacher ID" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="teacherPassword">Password</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-lock"></i>
+                                <input type="password" id="teacherPassword" placeholder="Enter your password" required>
+                            </div>
+                        </div>
+
+                        <div class="forgot-password">
+                            <a href="#">Forgot Password?</a>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-sign-in-alt"></i>
+                            Login to Dashboard
+                        </button>
+
+                        <div class="demo-note">
+                            <strong>DEMO CREDENTIALS:</strong>
+                            Teacher ID: <strong>TCH001</strong> | Password: <strong>teacher123</strong>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Student Dashboard (Hidden initially) -->
+        <div class="dashboard" id="studentDashboard">
+            <div class="dashboard-header">
+                <div class="student-info">
+                    <div class="student-details">
+                        <h2>Welcome, <span id="studentName">Emmanuel</span>!</h2>
+                        <p><strong>Class:</strong> <span id="studentClass">JSS 3A</span> | <strong>Session:</strong> 2024/2025</p>
+                    </div>
+                    <button class="logout-btn" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <div class="stat-value">9</div>
+                    <div class="stat-label">Subjects</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="stat-value">78.5%</div>
+                    <div class="stat-label">Average Score</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <div class="stat-value">5th</div>
+                    <div class="stat-label">Class Position</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                    <div class="stat-value">95%</div>
+                    <div class="stat-label">Attendance</div>
+                </div>
+            </div>
+
+            <div class="results-table">
+                <h3><i class="fas fa-file-alt"></i> First Term Results - 2024/2025</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Subject</th>
+                            <th>CA (40)</th>
+                            <th>Exam (60)</th>
+                            <th>Total (100)</th>
+                            <th>Grade</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Mathematics</td>
+                            <td>35</td>
+                            <td>52</td>
+                            <td>87</td>
+                            <td><span class="grade grade-a">A</span></td>
+                        </tr>
+                        <tr>
+                            <td>English Language</td>
+                            <td>32</td>
+                            <td>48</td>
+                            <td>80</td>
+                            <td><span class="grade grade-a">A</span></td>
+                        </tr>
+                        <tr>
+                            <td>Basic Science</td>
+                            <td>30</td>
+                            <td>45</td>
+                            <td>75</td>
+                            <td><span class="grade grade-a">A</span></td>
+                        </tr>
+                        <tr>
+                            <td>Social Studies</td>
+                            <td>28</td>
+                            <td>44</td>
+                            <td>72</td>
+                            <td><span class="grade grade-a">A</span></td>
+                        </tr>
+                        <tr>
+                            <td>Computer Studies</td>
+                            <td>35</td>
+                            <td>50</td>
+                            <td>85</td>
+                            <td><span class="grade grade-a">A</span></td>
+                        </tr>
+                        <tr>
+                            <td>Business Studies</td>
+                            <td>30</td>
+                            <td>42</td>
+                            <td>72</td>
+                            <td><span class="grade grade-a">A</span></td>
+                        </tr>
+                        <tr>
+                            <td>Home Economics</td>
+                            <td>32</td>
+                            <td>46</td>
+                            <td>78</td>
+                            <td><span class="grade grade-a">A</span></td>
+                        </tr>
+                        <tr>
+                            <td>Physical Education</td>
+                            <td>36</td>
+                            <td>48</td>
+                            <td>84</td>
+                            <td><span class="grade grade-a">A</span></td>
+                        </tr>
+                        <tr>
+                            <td>Civic Education</td>
+                            <td>28</td>
+                            <td>40</td>
+                            <td>68</td>
+                            <td><span class="grade grade-b">B</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab switching
+        function switchTab(type) {
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            if (type === 'student') {
+                document.querySelector('.tab').classList.add('active');
+                document.getElementById('studentTab').classList.add('active');
+            } else {
+                document.querySelectorAll('.tab')[1].classList.add('active');
+                document.getElementById('teacherTab').classList.add('active');
+            }
+            
+            hideError();
+        }
+
+        // Show error message
+        function showError(message) {
+            const errorAlert = document.getElementById('errorAlert');
+            const errorMessage = document.getElementById('errorMessage');
+            errorMessage.textContent = message;
+            errorAlert.classList.add('show');
+        }
+
+        // Hide error message
+        function hideError() {
+            document.getElementById('errorAlert').classList.remove('show');
+        }
+
+        // Student login
+        document.getElementById('studentLoginForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const admissionNo = document.getElementById('studentId').value;
+            const password = document.getElementById('studentPassword').value;
+            
+            // Demo validation
+            if (admissionNo === 'FPS2024001' && password === 'demo123') {
+                // Hide login card and show dashboard
+                document.getElementById('loginCard').style.display = 'none';
+                document.getElementById('studentDashboard').classList.add('active');
+                document.querySelector('.back-button').style.display = 'none';
+            } else {
+                showError('Invalid admission number or password. Please try demo credentials.');
+            }
+        });
+
+        // Teacher login
+        document.getElementById('teacherLoginForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const teacherId = document.getElementById('teacherId').value;
+            const password = document.getElementById('teacherPassword').value;
+            
+            if (teacherId === 'TCH001' && password === 'teacher123') { window.location.href= 'teacher-portal.html';
+            } else {
+                showError('Invalid teacher ID or password. Please try demo credentials.');
+            }
+        });
+
+        // Logout
+        function logout() {
+            document.getElementById('loginCard').style.display = 'grid';
+            document.getElementById('studentDashboard').classList.remove('active');
+            document.querySelector('.back-button').style.display = 'inline-flex';
+            document.getElementById('studentLoginForm').reset();
+            hideError();
+        }
+    </script>
+</body>
+</html>
