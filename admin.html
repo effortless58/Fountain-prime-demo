@@ -1,0 +1,1301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Fountain Prime School</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #667eea;
+            --secondary: #764ba2;
+            --success: #48bb78;
+            --warning: #ed8936;
+            --danger: #f56565;
+            --dark: #2d3748;
+            --light: #f7fafc;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--light);
+        }
+
+        /* Login Screen */
+        .login-container {
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .login-box {
+            background: white;
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 450px;
+            width: 100%;
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .login-header i {
+            font-size: 4rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .login-header h1 {
+            font-size: 2rem;
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .login-header p {
+            color: #718096;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+            font-weight: 600;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-wrapper i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #a0aec0;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 1rem 1rem 1rem 3rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 1rem;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .btn-login:hover {
+            transform: translateY(-2px);
+        }
+
+        .error-message {
+            background: #fed7d7;
+            color: #742a2a;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .demo-credentials {
+            background: #bee3f8;
+            color: #2c5282;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        /* Dashboard */
+        .dashboard {
+            display: none;
+        }
+
+        .dashboard.active {
+            display: flex;
+        }
+
+        .sidebar {
+            width: 260px;
+            background: linear-gradient(135deg, var(--dark), #1a202c);
+            color: white;
+            min-height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            overflow-y: auto;
+            transition: transform 0.3s;
+        }
+
+        .sidebar-header {
+            padding: 2rem 1.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .sidebar-header h2 {
+            font-size: 1.3rem;
+            margin-top: 0.5rem;
+        }
+
+        .nav-menu {
+            padding: 1.5rem 0;
+        }
+
+        .nav-item {
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            background: rgba(255,255,255,0.1);
+            border-left: 4px solid var(--primary);
+        }
+
+        .nav-item i {
+            width: 20px;
+        }
+
+        .main-content {
+            margin-left: 260px;
+            padding: 2rem;
+            min-height: 100vh;
+            transition: margin-left 0.3s;
+        }
+
+        .top-bar {
+            background: white;
+            padding: 1.5rem 2rem;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .welcome-text h2 {
+            color: var(--dark);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logout-btn {
+            background: var(--danger);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: #e53e3e;
+            transform: translateY(-2px);
+        }
+
+        /* Mobile menu toggle */
+        .menu-toggle {
+            display: none;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.75rem 1rem;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            z-index: 1001;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            transition: transform 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: white;
+        }
+
+        .stat-icon.blue { background: linear-gradient(135deg, #667eea, #764ba2); }
+        .stat-icon.green { background: linear-gradient(135deg, #48bb78, #38a169); }
+        .stat-icon.orange { background: linear-gradient(135deg, #ed8936, #dd6b20); }
+        .stat-icon.red { background: linear-gradient(135deg, #f56565, #e53e3e); }
+
+        .stat-info h3 {
+            font-size: 2rem;
+            color: var(--dark);
+        }
+
+        .stat-info p {
+            color: #718096;
+        }
+
+        .content-section {
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .section-header h3 {
+            font-size: 1.5rem;
+            color: var(--dark);
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        /* Search and filter */
+        .search-filter {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 250px;
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 3rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 1rem;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #a0aec0;
+        }
+
+        .filter-select {
+            padding: 0.75rem 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 600px;
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        th {
+            background: var(--light);
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        tbody tr {
+            transition: background 0.2s;
+        }
+
+        tbody tr:hover {
+            background: var(--light);
+        }
+
+        .badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .badge-success { background: #c6f6d5; color: #22543d; }
+        .badge-warning { background: #fef5cb; color: #744210; }
+        .badge-danger { background: #fed7d7; color: #742a2a; }
+
+        .action-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 0.5rem;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .action-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .action-btn.edit { background: #bee3f8; color: #2c5282; }
+        .action-btn.delete { background: #fed7d7; color: #742a2a; }
+        .action-btn.approve { background: #c6f6d5; color: #22543d; }
+        .action-btn.view { background: #e9d8fd; color: #553c9a; }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: slideDown 0.3s;
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-header h3 {
+            color: var(--dark);
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #718096;
+        }
+
+        .form-row {
+            margin-bottom: 1rem;
+        }
+
+        .form-row label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+            font-weight: 600;
+        }
+
+        .form-row input,
+        .form-row select,
+        .form-row textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .form-row textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .btn-cancel {
+            background: #e2e8f0;
+            color: var(--dark);
+        }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #718096;
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 968px) {
+            .menu-toggle {
+                display: block;
+            }
+
+            .sidebar {
+                transform: translateX(-100%);
+                z-index: 1000;
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .top-bar {
+                padding-left: 4rem;
+            }
+
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .search-filter {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div class="login-container" id="loginScreen">
+        <div class="login-box">
+            <div class="login-header">
+                <i class="fas fa-shield-alt"></i>
+                <h1>Admin Login</h1>
+                <p>Fountain Prime School Management System</p>
+            </div>
+
+            <div class="error-message" id="errorMessage">
+                Invalid username or password!
+            </div>
+
+            <form id="loginForm">
+                <div class="form-group">
+                    <label>Username</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-user"></i>
+                        <input type="text" id="username" placeholder="Enter username" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Password</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="password" placeholder="Enter password" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-login">
+                    <i class="fas fa-sign-in-alt"></i> Login to Dashboard
+                </button>
+
+                <div class="demo-credentials">
+                    <strong>Demo Credentials:</strong><br>
+                    Username: <strong>admin</strong> | Password: <strong>admin123</strong>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Dashboard -->
+    <div class="dashboard" id="dashboard">
+        <!-- Mobile Menu Toggle -->
+        <button class="menu-toggle" onclick="toggleSidebar()">
+            <i class="fas fa-bars"></i>
+        </button>
+
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <i class="fas fa-graduation-cap" style="font-size: 2rem;"></i>
+                <h2>Admin Panel</h2>
+            </div>
+            <nav class="nav-menu">
+                <div class="nav-item active" onclick="showSection('overview')">
+                    <i class="fas fa-home"></i>
+                    <span>Overview</span>
+                </div>
+                <div class="nav-item" onclick="showSection('students')">
+                    <i class="fas fa-user-graduate"></i>
+                    <span>Students</span>
+                </div>
+                <div class="nav-item" onclick="showSection('teachers')">
+                    <i class="fas fa-chalkboard-teacher"></i>
+                    <span>Teachers</span>
+                </div>
+                <div class="nav-item" onclick="showSection('admissions')">
+                    <i class="fas fa-file-alt"></i>
+                    <span>Admissions</span>
+                </div>
+                <div class="nav-item" onclick="showSection('results')">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Results</span>
+                </div>
+                <div class="nav-item" onclick="showSection('settings')">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Bar -->
+            <div class="top-bar">
+                <div class="welcome-text">
+                    <h2>Welcome, Administrator</h2>
+                    <p style="color: #718096;">Manage your school efficiently</p>
+                </div>
+                <div class="user-info">
+                    <span style="font-weight: 600;">Admin User</span>
+                    <button class="logout-btn" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </div>
+            </div>
+
+            <!-- Overview Section -->
+            <section class="content-section active" id="overview">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon blue">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>450</h3>
+                            <p>Total Students</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon green">
+                            <i class="fas fa-chalkboard-teacher"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>28</h3>
+                            <p>Teachers</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon orange">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>15</h3>
+                            <p>Pending Admissions</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon red">
+                            <i class="fas fa-exclamation-circle"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>7</h3>
+                            <p>Issues</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section-card">
+                    <div class="section-header">
+                        <h3>Recent Activities</h3>
+                    </div>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Activity</th>
+                                    <th>User</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>New admission application</td>
+                                    <td>John Doe (Parent)</td>
+                                    <td>Today, 10:30 AM</td>
+                                    <td><span class="badge badge-warning">Pending</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Results uploaded - JSS 3</td>
+                                    <td>Mrs. Johnson (Teacher)</td>
+                                    <td>Yesterday, 3:45 PM</td>
+                                    <td><span class="badge badge-success">Completed</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Student registration</td>
+                                    <td>Admin</td>
+                                    <td>Yesterday, 11:20 AM</td>
+                                    <td><span class="badge badge-success">Completed</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Students Section -->
+            <section class="content-section" id="students">
+                <div class="section-card">
+                    <div class="section-header">
+                        <h3>All Students</h3>
+                        <button class="btn btn-primary" onclick="openModal('addStudentModal')">
+                            <i class="fas fa-plus"></i> Add New Student
+                        </button>
+                    </div>
+                    
+                    <div class="search-filter">
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" placeholder="Search students..." id="studentSearch">
+                        </div>
+                        <select class="filter-select">
+                            <option>All Classes</option>
+                            <option>Primary 1</option>
+                            <option>Primary 2</option>
+                            <option>JSS 1</option>
+                            <option>JSS 2</option>
+                            <option>JSS 3</option>
+                        </select>
+                    </div>
+
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Admission No.</th>
+                                    <th>Name</th>
+                                    <th>Class</th>
+                                    <th>Parent Contact</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>FPS2024001</td>
+                                    <td>John Doe</td>
+                                    <td>JSS 3A</td>
+                                    <td>080XXXXXXXX</td>
+                                    <td><span class="badge badge-success">Active</span></td>
+                                    <td>
+                                        <button class="action-btn view" onclick="alert('View student details')">View</button>
+                                        <button class="action-btn edit">Edit</button>
+                                        <button class="action-btn delete">Delete</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>FPS2024002</td>
+                                    <td>Jane Smith</td>
+                                    <td>Primary 5</td>
+                                    <td>081XXXXXXXX</td>
+                                    <td><span class="badge badge-success">Active</span></td>
+                                    <td>
+                                        <button class="action-btn view" onclick="alert('View student details')">View</button>
+                                        <button class="action-btn edit">Edit</button>
+                                        <button class="action-btn delete">Delete</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Teachers Section -->
+            <section class="content-section" id="teachers">
+                <div class="section-card">
+                    <div class="section-header">
+                        <h3>Teaching Staff</h3>
+                        <button class="btn btn-primary" onclick="openModal('addTeacherModal')">
+                            <i class="fas fa-plus"></i> Add New Teacher
+                        </button>
+                    </div>
+                    
+                    <div class="search-filter">
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" placeholder="Search teachers...">
+                        </div>
+                        <select class="filter-select">
+                            <option>All Subjects</option>
+                            <option>Mathematics</option>
+                            <option>English</option>
+                            <option>Science</option>
+                        </select>
+                    </div>
+
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Staff ID</th>
+                                    <th>Name</th>
+                                    <th>Subject</th>
+                                    <th>Classes</th>
+                                    <th>Contact</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>TCH001</td>
+                                    <td>Mrs. Johnson</td>
+                                    <td>Mathematics</td>
+                                    <td>JSS 1, JSS 2, JSS 3</td>
+                                    <td>080XXXXXXXX</td>
+                                    <td>
+                                        <button class="action-btn view" onclick="alert('View teacher details')">View</button>
+                                        <button class="action-btn edit">Edit</button>
+                                        <button class="action-btn delete">Delete</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Admissions Section -->
+            <section class="content-section" id="admissions">
+                <div class="section-card">
+                    <div class="section-header">
+                        <h3>Admission Applications</h3>
+                    </div>
+                    
+                    <div class="search-filter">
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" placeholder="Search applications...">
+                        </div>
+                        <select class="filter-select">
+                            <option>All Status</option>
+                            <option>Pending</option>
+                            <option>Approved</option>
+                            <option>Rejected</option>
+                        </select>
+                    </div>
+
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Application No.</th>
+                                    <th>Student Name</th>
+                                    <th>Class Applied</th>
+                                    <th>Parent Contact</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>FPS20255432</td>
+                                    <td>Michael Brown</td>
+                                    <td>Primary 1</td>
+                                    <td>080XXXXXXXX</td>
+                                    <td>Nov 26, 2025</td>
+                                    <td><span class="badge badge-warning">Pending</span></td>
+                                    <td>
+                                        <button class="action-btn approve" onclick="handleApproval(this)">Approve</button>
+                                        <button class="action-btn delete" onclick="handleRejection(this)">Reject</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Results Section -->
+            <section class="content-section" id="results">
+                <div class="section-card">
+                    <div class="section-header">
+                        <h3>Results Management</h3>
+                        <button class="btn btn-success" onclick="openModal('uploadResultsModal')">
+                            <i class="fas fa-upload"></i> Upload Bulk Results
+                        </button>
+                    </div>
+                    <p style="color: #718096; margin-bottom: 2rem;">Manage student results and generate report cards</p>
+                    
+                    <div class="search-filter">
+                        <select class="filter-select">
+                            <option>Select Class</option>
+                            <option>Primary 1</option>
+                            <option>Primary 2</option>
+                            <option>JSS 1</option>
+                            <option>JSS 2</option>
+                            <option>JSS 3</option>
+                        </select>
+                        <select class="filter-select">
+                            <option>Select Term</option>
+                            <option>First Term</option>
+                            <option>Second Term</option>
+                            <option>Third Term</option>
+                        </select>
+                    </div>
+
+                    <div class="empty-state">
+                        <i class="fas fa-chart-line"></i>
+                        <p>Select a class and term to view or upload results</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Settings Section -->
+            <section class="content-section" id="settings">
+                <div class="section-card">
+                    <div class="section-header">
+                        <h3>System Settings</h3>
+                    </div>
+                    <div style="display: grid; gap: 1rem;">
+                        <div style="padding: 1.5rem; background: var(--light); border-radius: 10px; cursor: pointer; transition: all 0.3s;" onmouseover="this.style.transform='translateX(5px)'" onmouseout="this.style.transform='translateX(0)'">
+                            <h4 style="margin-bottom: 0.5rem;"><i class="fas fa-school"></i> School Information</h4>
+                            <p style="color: #718096;">Update school name, address, and contact details</p>
+                        </div>
+                        <div style="padding: 1.5rem; background: var(--light); border-radius: 10px; cursor: pointer; transition: all 0.3s;" onmouseover="this.style.transform='translateX(5px)'" onmouseout="this.style.transform='translateX(0)'">
+                            <h4 style="margin-bottom: 0.5rem;"><i class="fas fa-calendar-alt"></i> Academic Session</h4>
+                            <p style="color: #718096;">Manage current session and terms</p>
+                        </div>
+                        <div style="padding: 1.5rem; background: var(--light); border-radius: 10px; cursor: pointer; transition: all 0.3s;" onmouseover="this.style.transform='translateX(5px)'" onmouseout="this.style.transform='translateX(0)'">
+                            <h4 style="margin-bottom: 0.5rem;"><i class="fas fa-user-shield"></i> User Management</h4>
+                            <p style="color: #718096;">Add, edit, or remove admin users</p>
+                        </div>
+                        <div style="padding: 1.5rem; background: var(--light); border-radius: 10px; cursor: pointer; transition: all 0.3s;" onmouseover="this.style.transform='translateX(5px)'" onmouseout="this.style.transform='translateX(0)'">
+                            <h4 style="margin-bottom: 0.5rem;"><i class="fas fa-database"></i> Backup & Restore</h4>
+                            <p style="color: #718096;">Backup school data and restore if needed</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Add Student Modal -->
+    <div class="modal" id="addStudentModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-user-plus"></i> Add New Student</h3>
+                <button class="close-modal" onclick="closeModal('addStudentModal')">&times;</button>
+            </div>
+            <form onsubmit="handleAddStudent(event)">
+                <div class="form-row">
+                    <label>Full Name</label>
+                    <input type="text" required placeholder="Enter student name">
+                </div>
+                <div class="form-row">
+                    <label>Date of Birth</label>
+                    <input type="date" required>
+                </div>
+                <div class="form-row">
+                    <label>Class</label>
+                    <select required>
+                        <option value="">Select class</option>
+                        <option>Primary 1</option>
+                        <option>Primary 2</option>
+                        <option>JSS 1</option>
+                        <option>JSS 2</option>
+                        <option>JSS 3</option>
+                    </select>
+                </div>
+                <div class="form-row">
+                    <label>Parent/Guardian Name</label>
+                    <input type="text" required placeholder="Enter parent name">
+                </div>
+                <div class="form-row">
+                    <label>Parent Contact</label>
+                    <input type="tel" required placeholder="080XXXXXXXX">
+                </div>
+                <div class="form-row">
+                    <label>Address</label>
+                    <textarea required placeholder="Enter address"></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-cancel" onclick="closeModal('addStudentModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add Student</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Teacher Modal -->
+    <div class="modal" id="addTeacherModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-chalkboard-teacher"></i> Add New Teacher</h3>
+                <button class="close-modal" onclick="closeModal('addTeacherModal')">&times;</button>
+            </div>
+            <form onsubmit="handleAddTeacher(event)">
+                <div class="form-row">
+                    <label>Full Name</label>
+                    <input type="text" required placeholder="Enter teacher name">
+                </div>
+                <div class="form-row">
+                    <label>Subject</label>
+                    <input type="text" required placeholder="e.g., Mathematics">
+                </div>
+                <div class="form-row">
+                    <label>Qualification</label>
+                    <input type="text" required placeholder="e.g., B.Ed, M.Sc">
+                </div>
+                <div class="form-row">
+                    <label>Contact Number</label>
+                    <input type="tel" required placeholder="080XXXXXXXX">
+                </div>
+                <div class="form-row">
+                    <label>Email</label>
+                    <input type="email" required placeholder="teacher@email.com">
+                </div>
+                <div class="form-row">
+                    <label>Classes Assigned</label>
+                    <input type="text" placeholder="e.g., JSS 1, JSS 2, JSS 3">
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-cancel" onclick="closeModal('addTeacherModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add Teacher</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Upload Results Modal -->
+    <div class="modal" id="uploadResultsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-upload"></i> Upload Results</h3>
+                <button class="close-modal" onclick="closeModal('uploadResultsModal')">&times;</button>
+            </div>
+            <form onsubmit="handleUploadResults(event)">
+                <div class="form-row">
+                    <label>Class</label>
+                    <select required>
+                        <option value="">Select class</option>
+                        <option>Primary 1</option>
+                        <option>Primary 2</option>
+                        <option>JSS 1</option>
+                        <option>JSS 2</option>
+                        <option>JSS 3</option>
+                    </select>
+                </div>
+                <div class="form-row">
+                    <label>Term</label>
+                    <select required>
+                        <option value="">Select term</option>
+                        <option>First Term</option>
+                        <option>Second Term</option>
+                        <option>Third Term</option>
+                    </select>
+                </div>
+                <div class="form-row">
+                    <label>Upload CSV/Excel File</label>
+                    <input type="file" accept=".csv,.xlsx,.xls" required>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-cancel" onclick="closeModal('uploadResultsModal')">Cancel</button>
+                    <button type="submit" class="btn btn-success">Upload Results</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Login functionality
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            // Demo credentials
+            if (username === 'admin' && password === 'admin123') {
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('dashboard').classList.add('active');
+            } else {
+                document.getElementById('errorMessage').style.display = 'block';
+                setTimeout(() => {
+                    document.getElementById('errorMessage').style.display = 'none';
+                }, 3000);
+            }
+        });
+
+        // Logout
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                document.getElementById('dashboard').classList.remove('active');
+                document.getElementById('loginScreen').style.display = 'flex';
+                document.getElementById('loginForm').reset();
+            }
+        }
+
+        // Toggle sidebar for mobile
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('active');
+        }
+
+        // Section navigation
+        function showSection(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Show selected section
+            document.getElementById(sectionId).classList.add('active');
+            
+            // Update active nav item
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            event.target.closest('.nav-item').classList.add('active');
+
+            // Close sidebar on mobile after selection
+            if (window.innerWidth <= 968) {
+                document.getElementById('sidebar').classList.remove('active');
+            }
+        }
+
+        // Modal functions
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.classList.remove('active');
+            }
+        }
+
+        // Form handlers
+        function handleAddStudent(e) {
+            e.preventDefault();
+            alert('Student added successfully! In production, this would save to database.');
+            closeModal('addStudentModal');
+            e.target.reset();
+        }
+
+        function handleAddTeacher(e) {
+            e.preventDefault();
+            alert('Teacher added successfully! In production, this would save to database.');
+            closeModal('addTeacherModal');
+            e.target.reset();
+        }
+
+        function handleUploadResults(e) {
+            e.preventDefault();
+            alert('Results uploaded successfully! In production, this would process the file.');
+            closeModal('uploadResultsModal');
+            e.target.reset();
+        }
+
+        // Approval and rejection handlers
+        function handleApproval(btn) {
+            if (confirm('Are you sure you want to approve this application?')) {
+                const row = btn.closest('tr');
+                const badge = row.querySelector('.badge');
+                badge.className = 'badge badge-success';
+                badge.textContent = 'Approved';
+                btn.remove();
+                alert('Application approved! In production, this would update database and send notification.');
+            }
+        }
+
+        function handleRejection(btn) {
+            if (confirm('Are you sure you want to reject this application?')) {
+                const row = btn.closest('tr');
+                const badge = row.querySelector('.badge');
+                badge.className = 'badge badge-danger';
+                badge.textContent = 'Rejected';
+                const approveBtn = row.querySelector('.approve');
+                if (approveBtn) approveBtn.remove();
+                btn.remove();
+                alert('Application rejected! In production, this would update database and send notification.');
+            }
+        }
+
+        // Action buttons
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('edit')) {
+                alert('Edit functionality - In production, this opens edit modal with pre-filled data');
+            }
+            
+            if (e.target.classList.contains('delete')) {
+                if (confirm('Are you sure you want to delete this item?')) {
+                    e.target.closest('tr').remove();
+                    alert('Item deleted! In production, this would remove from database.');
+                }
+            }
+        });
+
+        // Search functionality
+        document.getElementById('studentSearch')?.addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const rows = document.querySelectorAll('#students tbody tr');
+            
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(searchTerm) ? '' : 'none';
+            });
+        });
+
+        // Auto-close sidebar when resizing to desktop
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 968) {
+                document.getElementById('sidebar').classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>
